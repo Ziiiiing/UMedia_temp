@@ -41,9 +41,9 @@ res = urllib.request.urlopen(req)
 data = json.loads(res.read())             
 
 # Uncomment the following code block if you want to see the request json data locally
-with open('request_data.json', 'w') as f:
-    json.dump(data, f)
-    print("#### Requested data is stored in request_data.json ####")
+# with open('request_data.json', 'w') as f:
+#     json.dump(data, f)
+#     print("#### Requested data is stored in request_data.json ####")
 
 
 def NewItems(item):
