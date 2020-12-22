@@ -41,9 +41,9 @@ res = urllib.request.urlopen(req)
 data = json.loads(res.read())             
 
 # Uncomment the following code block if you want to see the request json data locally
-# with open('request_data.json', 'w') as f:
-#     json.dump(data, f)
-#     print("#### Requested data is stored in request_data.json ####")
+with open('request_data.json', 'w') as f:
+    json.dump(data, f)
+    print("#### Requested data is stored in request_data.json ####")
 
 
 def NewItems(item):
@@ -61,14 +61,14 @@ def NewItems(item):
         A list stores all specific metadata elements for a map item.
 
     '''  
-    identifier = item['id']
-    print(f'Collecting map id: {identifier}')
+    identifier = item['system_identifier']
+    slug = item['id']
+    print(f'Collecting map id: {slug}')
     
     image = item['object']
     isPartOf =item['set_spec']
     parentId = item['parent_id']
     title = item['title']
-    dimensions = item['dimensions']   
     dateIssued = item['date_created'][0]
     types = 'Maps'
     formats = 'jpg'
@@ -93,9 +93,17 @@ def NewItems(item):
     ## description
     if 'description' in item:
         description = item['description']
-        descriptions = f'{description} Dimension: {dimensions}'
     else:
-        descriptions = f'Dimension: {dimensions}'
+        description = ''
+
+    ## dimensions
+    if 'dimensions' in item:
+        dimensions = item['dimensions']
+    else:
+        dimensions = ''
+
+    # 'descriptions' concatenates the 'description' and the 'dimensions' info
+    descriptions = description + dimensions
 
     ## city/state/country
     spatialCoverage = ''
@@ -121,7 +129,7 @@ def NewItems(item):
             spatialCoverage = region
 
 
-    metadataList = [identifier, image, isPartOf, title, descriptions, dateIssued, 
+    metadataList = [identifier, slug, image, isPartOf, title, descriptions, dateIssued, 
                     creator, publisher, types, formats, keyword, language, 
                     spatialCoverage, accessRights, iiif]
 
@@ -169,7 +177,7 @@ for i in range(len(data)):
 
         
 # fieldnames of output csv file
-fieldnames = ['Identifier', 'Image', 'Is Part Of', 'Title', 'Description',
+fieldnames = ['Identifier', 'Slug', 'Image', 'Is Part Of', 'Title', 'Description',
               'Date Issued', 'Creator', 'Publisher', 'Types', 'Format', 
               'Keyword', 'Language', 'Spatial Coverage', 'Access Rights', 'IIIF']        
 
